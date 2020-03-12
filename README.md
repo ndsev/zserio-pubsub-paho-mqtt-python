@@ -8,7 +8,7 @@ Sample implementation of Zserio Pub/Sub Paho MQTT backend in **Python**.
 [official instructions](https://mosquitto.org/download/). Mosquitto is the message broker which implements
 MQTT protocol.
    * Check that mosquitto broker is running
-      > On Ubuntu check `systemctl status mosquitto`.
+     > On Ubuntu check `systemctl status mosquitto`.
 
 2. Python 3 with Paho MQTT installed
 
@@ -26,14 +26,20 @@ MQTT protocol.
 ### Calculator Example
 
 ```bash
+cd examples/calculator
+# generate service using Zserio
+java -jar ../../3rdparty/zserio.jar calculator.zs -python gen
+
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH=../../3rdparty/runtime:../../src:gen
 python3 power_of_two_provider.py &
 python3 square_root_of_provider.py &
-python3 calculator_client
+python3 calculator_client.py
 # follow client's instructions
 # ...
 # pres q + ENTER to quit the client
 fg # and press Ctrl+C to quit the square_root_of_provider
 fg # and press Ctrl+C to quit the power_of_two_provider
 ```
+
+> For more understandable output run both providers and client in a separate terminal.
