@@ -35,7 +35,7 @@ class MqttClient(zserio.PubsubInterface):
 
         subscriptionId = self._numIds
         self._numIds += 1
-        self._subscriptions[subscriptionId] = _MqttSubscription(self._host, self._port, subscriptionId, topic,
+        self._subscriptions[subscriptionId] = _MqttSubscription(self._host, self._port, topic,
                                                                 callback, context)
         return subscriptionId
 
@@ -58,7 +58,7 @@ class MqttClient(zserio.PubsubInterface):
 _KEEPALIVE=60
 
 class _MqttSubscription:
-    def __init__(self, host, port, subscriptionId, topic, callback, context):
+    def __init__(self, host, port, topic, callback, context):
         self._topic = topic
         self._callback = callback
         self._context = context

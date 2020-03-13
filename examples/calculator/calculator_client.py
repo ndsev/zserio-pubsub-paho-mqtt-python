@@ -28,10 +28,15 @@ def _publishRequest(client, line):
     client.publishRequest(request)
 
 if __name__ == "__main__":
+    for arg in sys.argv[1:]:
+        if arg == "-h" or arg == "--help":
+            print("Usage: python %s [HOST [PORT]]")
+            exit(0)
+
     host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
     port = sys.argv[2] if len(sys.argv) > 2 else 1883
 
-    print("Welcome to Zserio Calculator Mosquitto Pub/Sub Client example!")
+    print("Welcome to Zserio Calculator Paho MQTT Pub/Sub Client example!")
     print("Creating client and subscriptions (terminate with ^C) ...", end='', flush=True)
 
     # instance of zserio_pubsub_paho_mqtt.MqttClient to be used as a PubsubInterface
