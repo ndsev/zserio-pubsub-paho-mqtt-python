@@ -4,18 +4,13 @@ Sample implementation of Zserio Pub/Sub Paho MQTT backend in **Python**.
 
 ## Prerequisites
 
-1. Install [Mosquitto](https://mosquitto.org) according to
-[official instructions](https://mosquitto.org/download/). Mosquitto is the message broker which implements
-MQTT protocol.
-   * Check that mosquitto broker is running
-     > On Ubuntu check `systemctl status mosquitto`.
-
-2. Python 3 with Paho MQTT installed
+1. [Mosquitto](https://mosquitto.org) message broker running.
+   > On Ubuntu check `systemctl status mosquitto`.
+2. Python 3 with Paho MQTT
 
    ```bash
    python3 -m pip install paho-mqtt
    ```
-
 3. Zserio Python runtime library
 4. Zserio compiler (`zserio.jar`)
 
