@@ -1,38 +1,41 @@
 import sys
 import signal
 
-import zserio
-from zserio_pubsub_paho_mqtt import MqttClient
 import calculator.api as api
 
-if __name__ == "__main__":
+from zserio_pubsub_paho_mqtt import MqttClient
+
+def _main():
     for arg in sys.argv[1:]:
-        if arg == "-h" or arg == "--help":
+        if arg in ("-h", "--help"):
             print("Usage: python %s [HOST [PORT]]")
-            exit(0)
+            sys.exit(0)
 
     host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
     port = sys.argv[2] if len(sys.argv) > 2 else 1883
 
     # instance of zserio_pubsub_paho_mqtt.MqttClient to be used as a PubsubInterface
-    mqttClient = MqttClient(host, port)
+    mqtt_client = MqttClient(host, port)
 
     # power of two provider uses the Paho MQTT client backend
-    powerOfTwoProvider = api.PowerOfTwoProvider(mqttClient)
+    power_of_two_provider = api.PowerOfTwoProvider(mqtt_client)
 
-    def callback(topic, value):
-        print("PowerOfTwoProvider: request=", value.getValue())
-        response = api.U64.fromFields(value.getValue()**2)
-        powerOfTwoProvider.publishPowerOfTwo(response)
+    def callback(_topic: str, request: api.I32):
+        print("power_of_two_provider: request=", request.value)
+        response = api.U64(request.value**2)
+        power_of_two_provider.publish_power_of_two(response)
 
-    powerOfTwoProvider.subscribeRequest(callback)
+    power_of_two_provider.subscribe_request(callback)
 
     print("Power of two provider, waiting for calculator/request...")
     print("Press Ctrl+C to quit.")
 
     try:
         signal.pause()
-    except:
+    except Exception:
         pass
 
-    mqttClient.close()
+    mqtt_client.close()
+
+if __name__ == "__main__":
+    sys.exit(_main())

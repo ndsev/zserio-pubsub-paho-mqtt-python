@@ -1,10 +1,10 @@
 import sys
 
-import zserio
-from zserio_pubsub_paho_mqtt import MqttClient
 import calculator.api as api
 
-def _printHelp():
+from zserio_pubsub_paho_mqtt import MqttClient
+
+def _print_help():
     print(
         "Help:",
         " INPUT        Any valid 32bit integer.",
@@ -17,21 +17,21 @@ def _printHelp():
         sep='\n'
     )
 
-def _publishRequest(client, line):
+def _publish_request(client: api.CalculatorClient, line: str):
     try:
-        request = api.I32.fromFields(int(line))
-    except Exception as e:
+        request = api.I32(int(line))
+    except Exception as excpt:
         print("Error: '%s' cannot be converted to int32!" % line)
-        print(e)
+        print(excpt)
         return
 
-    client.publishRequest(request)
+    client.publish_request(request)
 
-if __name__ == "__main__":
+def _main():
     for arg in sys.argv[1:]:
-        if arg == "-h" or arg == "--help":
+        if arg in ("-h", "--help"):
             print("Usage: python %s [HOST [PORT]]")
-            exit(0)
+            sys.exit(0)
 
     host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
     port = sys.argv[2] if len(sys.argv) > 2 else 1883
@@ -40,24 +40,26 @@ if __name__ == "__main__":
     print("Creating client and subscriptions (terminate with ^C) ...", end='', flush=True)
 
     # instance of zserio_pubsub_paho_mqtt.MqttClient to be used as a PubsubInterface
-    mqttClient = MqttClient(host, port)
+    mqtt_client = MqttClient(host, port)
 
     # calculator client uses the Paho MQTT client backend
-    client = api.CalculatorClient(mqttClient)
+    client = api.CalculatorClient(mqtt_client)
 
-    powerOfTwoCallback = lambda topic, value: print("power of two:", value.getValue())
-    powerOfTwoId = client.subscribePowerOfTwo(powerOfTwoCallback)
-    powerOfTwoSubscribed = True
+    power_of_two_callback = lambda topic, response: print("power_of_two:", response.value)
+    power_of_two_id = client.subscribe_power_of_two(power_of_two_callback)
+    power_of_two_subscribed = True
 
-    squareRootOfCallback = lambda topic, value: print("square_root_of:", value.getValue())
-    squareRootOfId = client.subscribeSquareRootOf(squareRootOfCallback)
-    squareRootOfSubscribed = True
+    square_root_of_callback = lambda topic, response: print("square_root_of:", response.value)
+    square_root_of_id = client.subscribe_square_root_of(square_root_of_callback)
+    square_root_of_subscribed = True
 
     print(" OK!")
     print("Write 'h' + ENTER for help.")
 
     while True:
-        line = input(('p' if powerOfTwoSubscribed else "") + ('s' if squareRootOfSubscribed else "") + "> ")
+        line = input(('p' if power_of_two_subscribed else "") +
+                     ('s' if square_root_of_subscribed else "") +
+                     "> ")
         if not line:
             continue
 
@@ -66,27 +68,30 @@ if __name__ == "__main__":
             break
 
         if line[0] == 'h':
-            _printHelp()
+            _print_help()
             continue
 
         if line[0] == 'p':
-            if powerOfTwoSubscribed:
-                client.unsubscribe(powerOfTwoId)
-                powerOfTwoSubscribed = False
+            if power_of_two_subscribed:
+                client.unsubscribe(power_of_two_id)
+                power_of_two_subscribed = False
             else:
-                powerOfTwoId = client.subscribePowerOfTwo(powerOfTwoCallback)
-                powerOfTwoSubscribed = True
+                power_of_two_id = client.subscribe_power_of_two(power_of_two_callback)
+                power_of_two_subscribed = True
             continue
 
         if line[0] == 's':
-            if squareRootOfSubscribed:
-                client.unsubscribe(squareRootOfId)
-                squareRootOfSubscribed = False
+            if square_root_of_subscribed:
+                client.unsubscribe(square_root_of_id)
+                square_root_of_subscribed = False
             else:
-                squareRootOfId = client.subscribeSquareRootOf(squareRootOfCallback)
-                squareRootOfSubscribed = True
+                square_root_of_id = client.subscribe_square_root_of(square_root_of_callback)
+                square_root_of_subscribed = True
             continue
 
-        _publishRequest(client, line)
+        _publish_request(client, line)
 
-    mqttClient.close()
+    mqtt_client.close()
+
+if __name__ == "__main__":
+    sys.exit(_main())

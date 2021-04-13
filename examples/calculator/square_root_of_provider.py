@@ -2,38 +2,41 @@ import sys
 import signal
 import math
 
-import zserio
-from zserio_pubsub_paho_mqtt import MqttClient
 import calculator.api as api
 
-if __name__ == "__main__":
+from zserio_pubsub_paho_mqtt import MqttClient
+
+def _main():
     for arg in sys.argv[1:]:
-        if arg == "-h" or arg == "--help":
+        if arg in ("-h", "--help"):
             print("Usage: python %s [HOST [PORT]]")
-            exit(0)
+            sys.exit(0)
 
     host = sys.argv[1] if len(sys.argv) > 1 else "localhost"
     port = sys.argv[2] if len(sys.argv) > 2 else 1883
 
     # instance of zserio_pubsub_paho_mqtt.MqttClient to be used as a PubsubInterface
-    mqttClient = MqttClient(host, port)
+    mqtt_client = MqttClient(host, port)
 
     # square root of provider uses the Paho MQTT client backend
-    squareRootOfProvider = api.SquareRootOfProvider(mqttClient)
+    square_root_of_provider = api.SquareRootOfProvider(mqtt_client)
 
-    def callback(topic, value):
-        print("SquareRootOfProvider: request=", value.getValue())
-        response = api.Double.fromFields(math.sqrt(value.getValue()))
-        squareRootOfProvider.publishSquareRootOf(response)
+    def callback(_topic: str, request: api.I32):
+        print("square_root_of_provider: request=", request.value)
+        response = api.Double(math.sqrt(request.value))
+        square_root_of_provider.publish_square_root_of(response)
 
-    squareRootOfProvider.subscribeRequest(callback)
+    square_root_of_provider.subscribe_request(callback)
 
     print("Square root of provider, waiting for calculator/request...")
     print("Press Ctrl+C to quit.")
 
     try:
         signal.pause()
-    except:
+    except Exception:
         pass
 
-    mqttClient.close()
+    mqtt_client.close()
+
+if __name__ == "__main__":
+    sys.exit(_main())

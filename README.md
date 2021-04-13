@@ -6,15 +6,18 @@ Sample implementation of Zserio Pub/Sub Paho MQTT backend in **Python**.
 
 1. [Mosquitto](https://mosquitto.org) message broker running.
    > On Ubuntu check `systemctl status mosquitto`.
-2. Python 3 with Paho MQTT
+1. Java JRE 8+
+1. Python 3.8+
+1. Paho MQTT:
 
-   ```bash
+   ```
    python3 -m pip install paho-mqtt
    ```
-3. Zserio Python runtime library
-4. Zserio compiler (`zserio.jar`)
+1. Zserio compiler with Python runtime library:
 
-> Zserio prerequisites are included in this repo in 3rdparty folder.
+   ```
+   python3 -m pip install zserio
+   ```
 
 ## Usage
 
@@ -23,18 +26,19 @@ Sample implementation of Zserio Pub/Sub Paho MQTT backend in **Python**.
 ```bash
 cd examples/calculator
 # generate service using Zserio
-java -jar ../../3rdparty/zserio.jar calculator.zs -python gen
+zserio calculator.zs -python ../../build/gen
 
 export PYTHONDONTWRITEBYTECODE=1
-export PYTHONPATH=../../3rdparty/runtime:../../src:gen
+export PYTHONPATH=../../src:../../build/gen
 python3 power_of_two_provider.py &
 python3 square_root_of_provider.py &
 python3 calculator_client.py
 # follow client's instructions
 # ...
-# pres q + ENTER to quit the client
-fg # and press Ctrl+C to quit the square_root_of_provider
-fg # and press Ctrl+C to quit the power_of_two_provider
-```
+# press q + ENTER to quit the client
+fg
+# press Ctrl+C to quit the square_root_of_provider
+fg
+# press Ctrl+C to quit the power_of_two_provider
 
 > For more understandable output run both providers and client in a separate terminal.
