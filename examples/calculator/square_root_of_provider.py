@@ -1,5 +1,5 @@
 import sys
-import signal
+import time
 import math
 
 import calculator.api as api
@@ -31,10 +31,9 @@ def _main():
     print("Square root of provider, waiting for calculator/request...")
     print("Press Ctrl+C to quit.")
 
-    try:
-        signal.pause()
-    except Exception:
-        pass
+    # signal.pause() is missing for Windows - wait 100ms and loop instead
+    while True:
+        time.sleep(0.1)
 
     mqtt_client.close()
 

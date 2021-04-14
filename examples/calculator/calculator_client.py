@@ -1,4 +1,5 @@
 import sys
+import time
 
 import calculator.api as api
 
@@ -64,7 +65,8 @@ def _main():
             continue
 
         if line[0] == 'q':
-            print("Quit.")
+            print("Quiting.")
+            time.sleep(1) # wait a little bit for a potential responses
             break
 
         if line[0] == 'h':
