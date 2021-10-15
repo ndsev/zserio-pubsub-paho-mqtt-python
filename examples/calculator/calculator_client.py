@@ -65,7 +65,7 @@ def _main():
             continue
 
         if line[0] == 'q':
-            print("Quiting.")
+            print("Quitting.")
             time.sleep(1) # wait a little bit for a potential responses
             break
 
