@@ -2,7 +2,7 @@ import sys
 import time
 import math
 
-import calculator.api as api
+from calculator import api
 
 from zserio_pubsub_paho_mqtt import MqttClient
 

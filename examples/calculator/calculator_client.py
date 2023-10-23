@@ -1,7 +1,7 @@
 import sys
 import time
 
-import calculator.api as api
+from calculator import api
 
 from zserio_pubsub_paho_mqtt import MqttClient
 
@@ -22,7 +22,7 @@ def _publish_request(client: api.CalculatorClient, line: str):
     try:
         request = api.I32(int(line))
     except Exception as excpt:
-        print("Error: '%s' cannot be converted to int32!" % line)
+        print(f"Error: '{line}' cannot be converted to int32!")
         print(excpt)
         return
 

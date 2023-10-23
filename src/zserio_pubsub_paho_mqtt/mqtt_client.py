@@ -3,7 +3,7 @@ import typing
 import zserio
 
 import paho.mqtt.client as mqtt # type: ignore
-import paho.mqtt.publish as publish # type: ignore
+from paho.mqtt import publish
 
 class MqttClient(zserio.PubsubInterface):
     """
@@ -61,7 +61,8 @@ class MqttClient(zserio.PubsubInterface):
 _KEEPALIVE=60
 
 class _MqttSubscription:
-    def __init__(self, host: str, port: int, topic: str, callback: typing.Callable[[str, bytes], None],
+    def __init__(self, host: str, port: int, topic: str,
+                 callback: typing.Callable[[str, bytes], None],
                  context: typing.Any):
         self._topic = topic
         self._callback = callback
