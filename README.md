@@ -1,5 +1,12 @@
 # Zserio Pub/Sub Paho MQTT Backend
 
+[![](https://github.com/ndsev/zserio-pubsub-paho-mqtt-python/actions/workflows/build_linux.yml/badge.svg)](https://github.com/ndsev/zserio-pubsub-paho-mqtt-python/actions/workflows/build_linux.yml)
+[![](https://img.shields.io/github/watchers/ndsev/zserio-pubsub-paho-mqtt-python.svg)](https://GitHub.com/ndsev/zserio-pubsub-paho-mqtt-python/watchers)
+[![](https://img.shields.io/github/forks/ndsev/zserio-pubsub-paho-mqtt-python.svg)](https://GitHub.com/ndsev/zserio-pubsub-paho-mqtt-python/network/members)
+[![](https://img.shields.io/github/stars/ndsev/zserio-pubsub-paho-mqtt-python.svg?color=yellow)](https://GitHub.com/ndsev/zserio-pubsub-paho-mqtt-python/stargazers)
+
+--------
+
 Sample implementation of Zserio Pub/Sub Paho MQTT backend in **Python**.
 
 ## Prerequisites
